@@ -11,7 +11,7 @@
     <table border=5 bordercolor=black height=20% width=5%>
         <caption>Javascript calculator</caption>
         <tr>
-            <td colspan="3"><input type="text" id="inputext" placeholder="0"></td>
+            <td colspan="3"><input type="text" id="inputext" placeholder=""></td>
         </tr>
         <tr>
             <td><button onclick="clr()">C</button></td>
@@ -51,13 +51,13 @@
 
         let calculate = (number) => {
             result.placeholder = result.placeholder + number;
-            console.log(number)
-            console.log(result.placeholder)
+            let res_array = result.placeholder.split(/[/\*\-\+]/);
+            console.log(res_array)
         }
 
         let Result = () => {
             try {
-                result.value = eval(result.placeholder)
+                result.placeholder = eval(result.placeholder)
             }
             catch (err) {
                 alert("Enter the valid input");
