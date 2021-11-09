@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<link rel="stylesheet" href="style.css">
+
+<head>
+    <title>Calculator</title>
+    <p>Javascript calculator</hp>
+</head>
+
+<body>
+
+    <table>
+        <tr>
+            <td colspan="3">
+                <div data-previous-operand class="previous-operand"></div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                <div data-current-operand class="current-operand"></div>
+            </td>
+        </tr>
+        <tr>
+            <td><button data-all-clear>AC</button></td>
+            <td><button data-delete>DEL</button></td>
+            <td><button data-operation>÷</button></td>
+        </tr>
+        <tr>
+            <td><button data-operation>*</button></td>
+            <td><button data-operation>+</button></td>
+            <td><button data-operation>-</button></td>
+        </tr>
+        <tr>
+            <td><button data-number>7</button></td>
+            <td><button data-number>8</button></td>
+            <td><button data-number>9</button></td>
+        </tr>
+        <tr>
+            <td><button data-number>4</button></td>
+            <td><button data-number>5</button></td>
+            <td><button data-number>6</button></td>
+        </tr>
+        <tr>
+            <td><button data-number>1</button></td>
+            <td><button data-number>2</button></td>
+            <td><button data-number>3</button></td>
+        </tr>
+        <tr>
+            <td><button data-number>0</button></td>
+            <td><button data-number>.</button></td>
+            <td><button data-equals>=</button></td>
+        </tr>
+    </table>
+
+    <script type="text/javascript" language="javascript">
+
+        const number_buttons = document.querySelectorAll('[data-number]')
+        const operation_buttons = document.querySelectorAll('[data-operation]')
+        const equals_button = document.querySelector('[data-equals]')
+        const delete_button = document.querySelector('[data-delete]')
+        const all_clear_button = document.querySelector('[data-all-clear]')
+        const previous_operand_element = document.querySelector('[data-previous-operand]')
+        const current_operand_element = document.querySelector('[data-current-operand]')
+
+        class Calculator {
+            constructor(previous_operand_element, current_operand_element) {
+                this.previous_operand_element = previous_operand_element
+                this.current_operand_element = current_operand_element
+                this.clear()
+            }
+
+            clear() {
+                this.current_operand = ''
+                this.previous_operand = ''
+                this.operation = undefined
+            }
+
+            delete() {
+                this.current_operand = this.current_operand.toString().slice(0, -1)
+            }
+
+            append_number(number) {
+                if (number === '.' && this.current_operand.includes('.')) return
+                this.current_operand = this.current_operand.toString() + number.toString()
+            }
+
+            choose_operation(operation) {
+                if (this.current_operand === '') return
+                if (this.previous_operand !== '') {
+                    this.compute()
+                }
+                this.operation = operation
+                this.previous_operand = this.current_operand
+                this.current_operand = ''
+            }
+
+            compute() {
+                let computation
+                const prev = parseFloat(this.previous_operand)
+                const current = parseFloat(this.current_operand)
+                if (isNaN(prev) || isNaN(current)) return
+                switch (this.operation) {
+                    case '+':
+                        computation = prev + current
+                        break
+                    case '-':
+                        computation = prev - current
+                        break
+                    case '*':
+                        computation = prev * current
+                        break
+                    case '÷':
+                        computation = prev / current
+                        break
+                    default:
+                        return
+                }
+                this.current_operand = computation
+                this.operation = undefined
+                this.previous_operand = ''
+            }
+
+            get_display_number(number) {
+                const string_number = number.toString()
+                const intege_digits = parseFloat(string_number.split('.')[0])
+                const decimal_digits = string_number.split('.')[1]
+                let integer_display
+                if (isNaN(intege_digits)) {
+                    integer_display = ''
+                } else {
+                    integer_display = intege_digits.toLocaleString('en', { maximum_fraction_digits: 0 })
+                }
+                if (decimal_digits != null) {
+                    return `${integer_display}.${decimal_digits}`
+                } else {
+                    return integer_display
+                }
+            }
+            update_display() {
+                this.current_operand_element.innerText =
+                    this.get_display_number(this.current_operand)
+                if (this.operation != null) {
+                    this.previous_operand_element.innerText =
+                        `${this.get_display_number(this.previous_operand)} ${this.operation}`
+                } else {
+                    this.previous_operand_element.innerText = ''
+                }
+            }
+        }
+
+        const calculator = new Calculator(previous_operand_element, current_operand_element)
+
+        number_buttons.forEach(button => {
+            button.addEventListener('click', () => {
+                calculator.append_number(button.innerText)
+                calculator.update_display()
+            })
+        })
+
+        operation_buttons.forEach(button => {
+            button.addEventListener('click', () => {
+                calculator.choose_operation(button.innerText)
+                calculator.update_display()
+            })
+        })
+
+        equals_button.addEventListener('click', button => {
+            calculator.compute()
+            calculator.update_display()
+        })
+
+        all_clear_button.addEventListener('click', button => {
+            calculator.clear()
+            calculator.update_display()
+        })
+
+        delete_button.addEventListener('click', button => {
+            calculator.delete()
+            calculator.update_display()
+        })
+    </script>
+</body>

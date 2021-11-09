@@ -1,0 +1,34 @@
+.previous-operand {
+    color: grey;
+    font-size: 1rem;
+    background-color: white;
+    padding: 10px;
+}
+
+.current-operand {
+    color: black;
+    font-size: 1rem;
+    background-color: white;
+    padding: 10px;
+}
+
+table{
+    width: 250px;
+    height: 250px;
+}
+
+td{
+    border: 1px solid black;
+    text-align: center;
+}
+
+button{
+    background-color: burlywood;
+    color: black;
+    width: 100%;
+    height: 100%;
+}
+
+div{
+    text-align: right;
+}
